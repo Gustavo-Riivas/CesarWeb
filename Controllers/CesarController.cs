@@ -29,7 +29,7 @@ namespace CesarWeb.Controllers
         [HttpPost]
         public IActionResult Desencriptar(CesarViewModel mensajeADesencriptar)
         {
-            mensajeADesencriptar.Mensaje = _seguridadService.Encriptar(mensajeADesencriptar.Mensaje, mensajeADesencriptar.Clave);
+            mensajeADesencriptar.Mensaje = _seguridadService.DesEncriptar(mensajeADesencriptar.Mensaje, mensajeADesencriptar.Clave);
             return View(mensajeADesencriptar);
         }
 
