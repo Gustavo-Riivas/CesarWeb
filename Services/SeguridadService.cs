@@ -1,27 +1,38 @@
+using System.Text;
 namespace CesarWeb.Services
 {
 
     public class SeguridadService : ISeguridadService<int>
     {
-        static string ABECEDARIO = ("'A'BCDEFGHIJKLMNÑOPQRSTUVWXYZABCDEFGHIJKLMNÑOPQRSTUVWXYZ");
-        static string abecedario= ("'z'yxwvutsrqpoñnmlkjihgfedcbazyxwvutsrqpoñnmlkjihgfedcba");
+        static string ABECEDARIO = ("ABCDEFGHIJKLMNÑOPQRSTUVWXYZABCDEFGHIJKLMNÑOPQRSTUVWXYZ");
+        static string abecedario= ("abcdefghijklmnñopqrstuvwxyz");
         ///  Aquí deben hacer todo el código necesario para Desencriptar el mensaje
         public string DesEncriptar(string Mensaje, int clave)
         {
-            int TAVO=0;
-            int GUS=0;
-            string igualar=Mensaje;
-            for(TAVO=0;TAVO<Mensaje.Length;TAVO++){
-                for(GUS=0;GUS<=52;GUS++){
-                    if(Mensaje[TAVO]==ABECEDARIO[GUS]){
-                        igualar=igualar.Replace(igualar[TAVO],ABECEDARIO[GUS-clave]);
+            StringBuilder desencripta=new StringBuilder();
+            foreach(var y in Mensaje){
+                if(char.IsLetter(y)){
+                  for(int h=0;h<=26;h++){
+                    if(y==ABECEDARIO[h]){
+                         var clave2 = (h - clave) % ABECEDARIO.Length;
+                         clave2 = clave2 < 0 ? clave2 = ABECEDARIO.Length + clave2 : clave2;
+                        desencripta.Append(ABECEDARIO[clave2%27]);
+                        }
+                    else if(y==abecedario[h]){
+
+                    /// Esto es lo mismo que un if(posLetraDesEnc < 0){posLetraDesEnc += ABECEDARIO.Length} else {posLetraDesEnc}
+                    var clave2 = (h - clave) % ABECEDARIO.Length;
+                    clave2 = clave2 < 0 ? clave2 = ABECEDARIO.Length + clave2 : clave2;
+                        desencripta.Append(abecedario[clave2%27]);
                     }
-                    if(Mensaje[TAVO]==abecedario[GUS]){
-                        igualar=igualar.Replace(igualar[TAVO],abecedario[GUS-clave]);
                     }
-                }
+                    } else{
+                        desencripta.Append(y);
+                    }
+
+                  
             }
-            Mensaje=igualar;
+            Mensaje=desencripta.ToString();
             return Mensaje;
         }
 
@@ -30,21 +41,24 @@ namespace CesarWeb.Services
         ///  Aquí deben hacer todo el código necesario para Encriptar el mensaje
         public string Encriptar(string Mensaje, int clave)
         {
-            int G=0;
-            int g=0;
-            string comparacion=Mensaje;
-            for(G=0;G<Mensaje.Length;G++){
-                for(g=0;g<=52;g++){
-                    if(Mensaje[G]==ABECEDARIO[g]){
+               StringBuilder desencripta=new StringBuilder();
+            foreach(var y in Mensaje){
+                if(char.IsLetter(y)){
+                  for(int h=0;h<=26;h++){
+                    if(y==ABECEDARIO[h]){
+                        desencripta.Append(ABECEDARIO[(clave+h)%27]);
+                        }
+                    else if(y==abecedario[h]){
+                         desencripta.Append(abecedario[(clave+h)%27]);
+                    }
+                    }
+                    } else{
+                        desencripta.Append(y);
+                    }
 
-                        comparacion=comparacion.Replace(comparacion[G],ABECEDARIO[g+clave]);
-                    }
-                    if(Mensaje[G]==abecedario[g]){
-                        comparacion=comparacion.Replace(comparacion[G],abecedario[g-clave]);
-                    }
-                }
+                  
             }
-            Mensaje=comparacion;
+            Mensaje=desencripta.ToString();
             return Mensaje;
         }
     }
